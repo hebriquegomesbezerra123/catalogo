@@ -1,0 +1,84 @@
+/* Visual Gabriel Distribuidora: azul-marinho, laranja e branco */
+:root{
+  --navy:#13294b;--navy-2:#0b1b35;--navy-3:#1d3c6e;--orange:#f26b1d;--orange-2:#d9560d;
+  /* nomes antigos usados nas páginas: --sun = laranja, --sky = azul */
+  --sun:var(--orange);--sun-2:var(--orange-2);--sky:var(--navy-3);--sky-2:var(--navy);
+  --bg:#ffffff;--panel:#fff;--fg:#13294b;--muted:#5d6b82;--line:#e1e6ee;
+  --accent:#13294b;--accent-soft:#eef2f8;--on-accent:#fff;
+  --warn:#9a5c00;--warn-soft:#fff3d1;--bad:#d1294b;--bad-soft:#fde7ec;--thumb:#fff;
+  --f-brand:"Poppins",system-ui,sans-serif;--f-display:"Poppins",system-ui,sans-serif;--f-body:"Nunito",system-ui,sans-serif;--f-mono:"Nunito",system-ui,sans-serif;
+  --r:16px;--shadow:0 0 0 1px #e6ebf2,0 6px 18px rgba(19,41,75,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14.5px;line-height:1.45}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* cabeçalho azul-marinho com faixa laranja */
+header{position:sticky;top:0;z-index:5;color:#fff;overflow:hidden;
+  background:linear-gradient(135deg,var(--navy-3) 0%,var(--navy) 55%,var(--navy-2) 100%);
+  box-shadow:0 4px 18px rgba(11,27,53,.25)}
+/* em tela baixa (celular) o cabeçalho rola junto, para não tapar os produtos */
+@media (max-height:720px),(max-width:640px){header{position:relative}}
+.adm header{position:relative}
+header::after{content:"";position:absolute;inset:auto 0 0 0;height:5px;background:var(--orange)}
+header .wrap{padding-block:14px 18px;display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}
+h1{font-family:var(--f-display);font-weight:800;font-size:22px;margin:0;line-height:1.1}
+
+/* logo: "G" + GABRIEL / DISTRIBUIDORA */
+.brand{display:flex;align-items:center;gap:10px}
+.brand .sol{display:none}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
+.logo svg{width:44px;height:44px;flex:none}
+.logo .wm{display:flex;flex-direction:column;line-height:1}
+.logo .wm b{font-family:var(--f-brand);font-weight:800;font-size:clamp(22px,6vw,28px);letter-spacing:.02em;color:#fff}
+.logo .wm small{font-family:var(--f-brand);font-weight:600;font-size:clamp(9px,2.4vw,11.5px);letter-spacing:.32em;color:var(--orange);margin-top:3px}
+.brand .tag2{font-family:var(--f-display);font-weight:600;font-size:12.5px;color:rgba(255,255,255,.8);letter-spacing:.04em;text-transform:uppercase;margin-top:4px}
+header .sub{color:rgba(255,255,255,.8)}
+.sub{color:var(--muted);font-size:12.5px}
+.bar{display:flex;flex-wrap:wrap;gap:8px}
+input,select{font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);min-width:0}
+header input[type=search]{border:0;border-radius:999px;padding:11px 18px;box-shadow:0 4px 14px rgba(0,0,0,.15);background:#fff;color:var(--navy)}
+header input[type=search]::placeholder{color:#8794a8}
+.bar input[type=search]{flex:1 1 260px}
+.bar select{flex:0 1 200px}
+.btn{font:inherit;font-family:var(--f-display);font-weight:600;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn.pri{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.pri:hover{background:var(--orange-2);border-color:var(--orange-2)}
+header .btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff}
+header .btn.pri{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+main .wrap{padding-block:18px 48px}
+.note{color:var(--muted);font-size:13px;margin:0 0 12px;font-weight:600}
+.banner{padding:10px 12px;border-radius:12px;background:var(--warn-soft);color:var(--warn);margin-bottom:12px;font-size:13px}
+.empty{padding:40px 0;text-align:center;color:var(--muted)}
+.nophoto{font-size:12px;font-weight:700;color:#8794a8}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:700;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.25);border-bottom:3px solid var(--orange)}
+/* catálogo */
+.cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+@media (max-width:480px){.cat{grid-template-columns:1fr 1fr;gap:10px}}
+/* admin */
+.stats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center}
+.chip{font-family:var(--f-display);font-weight:600;font-size:13px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+header .chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff}
+.chip[aria-pressed="true"],header .chip[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff}
+.list{display:flex;flex-direction:column;gap:8px}
+dialog{border:0;border-radius:22px;background:var(--panel);color:var(--fg);padding:0;width:min(560px,calc(100vw - 32px));box-shadow:0 20px 60px rgba(11,27,53,.35)}
+dialog::backdrop{background:rgba(11,27,53,.55);backdrop-filter:blur(3px)}
+.dlg{padding:20px;display:flex;flex-direction:column;gap:12px}
+.dlg h2{font-family:var(--f-display);font-size:20px;margin:0}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);font-weight:700}
+.f .full{grid-column:1/-1}
+.acts{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.sum{font-size:13px;background:var(--accent-soft);border-radius:12px;padding:12px;white-space:pre-wrap}
+.login{max-width:380px;margin:12vh auto;background:var(--panel);border-radius:22px;padding:26px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow);border-top:6px solid var(--orange)}
+.login .logo .wm b{color:var(--navy)}
+/* logo oficial: no cabeçalho azul fica num selo branco */
+.logoimg{display:block;height:auto;width:clamp(150px,42vw,210px)}
+header .logoimg{background:#fff;border-radius:14px;padding:7px 12px;box-shadow:0 4px 14px rgba(0,0,0,.18);box-sizing:content-box}
+.login .logoimg{width:230px;margin:0 auto 4px}

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gabriel Distribuidora · Catálogo Havaianas</title>
+<meta name="theme-color" content="#13294b">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="estilo.css">
+<style>
+.cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.cats .chip{white-space:nowrap}
+.pcard{background:var(--panel);border:0;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;font:inherit;color:inherit;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(11,127,214,.22)}
+@media (prefers-reduced-motion:reduce){.pcard{transition:none}.pcard:hover{transform:none}}
+.pcard .ph{aspect-ratio:1/1;background:var(--thumb);display:grid;place-items:center;width:100%}
+.pcard .ph img{width:100%;height:100%;object-fit:contain}
+.pcard .bd{padding:10px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1;border-top:3px solid var(--sun)}
+.pname{font-family:var(--f-display);font-weight:800;font-size:16.5px;line-height:1.15;color:var(--accent)}
+.pinfo{font-size:12.5px;color:var(--muted)}
+.dots{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.dots img,.dots i{width:26px;height:26px;border-radius:6px;background:var(--thumb);object-fit:contain;border:1px solid var(--line);display:inline-block}
+.dots span{font-size:11.5px;color:var(--muted);margin-left:2px}
+.ppreco{font-family:var(--f-display);font-weight:800;font-size:17px;margin-top:auto;font-variant-numeric:tabular-nums}
+.ppreco small{font-family:var(--f-body);font-weight:500;font-size:11.5px;color:var(--muted)}
+/* detalhe */
+#det{width:min(860px,calc(100vw - 24px))}
+.dbox{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.dfoto{background:var(--thumb);aspect-ratio:1/1;display:grid;place-items:center}
+.dfoto img{width:100%;height:100%;object-fit:contain}
+.dinfo{padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.dinfo h2{font-family:var(--f-display);font-weight:800;font-size:24px;margin:0;line-height:1.1}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.cores{display:flex;flex-wrap:wrap;gap:6px}
+.cores button{width:56px;height:56px;border-radius:14px;border:2.5px solid var(--line);background:var(--thumb);padding:2px;cursor:pointer}
+.cores button[aria-pressed="true"]{border-color:var(--accent)}
+.cores button img{width:100%;height:100%;object-fit:contain}
+.cores button i{font-style:normal;font-size:10px;color:#6b756f}
+.cornome{font-weight:600}
+.tams{display:flex;flex-wrap:wrap;gap:6px}
+.tams span{font-family:var(--f-display);font-weight:700;font-size:14px;border-radius:999px;padding:5px 12px;background:var(--accent-soft);color:var(--accent)}
+.dinfo h2{color:var(--accent)}
+/* promoção */
+.pcard .ph{position:relative}
+.pcard.promo{box-shadow:0 0 0 3px #ff3d5a,0 10px 26px rgba(255,61,90,.3)}
+.selo{position:absolute;top:10px;left:10px;z-index:1;background:linear-gradient(135deg,#ff3d5a,#ff7a2e);color:#fff;font-family:var(--f-display);font-weight:800;font-size:12.5px;letter-spacing:.06em;padding:4px 10px;border-radius:999px;box-shadow:0 4px 10px rgba(255,61,90,.4);transform:rotate(-4deg)}
+.emof{color:#d9560d}
+.tagof{display:inline-block;background:#111;color:#f26b1d;font:700 11px "Poppins",sans-serif;border-radius:999px;padding:2px 8px;margin-left:4px;vertical-align:middle}
+.tagfora{display:inline-block;background:#eef2f8;color:#5d6b82;font:700 11px "Poppins",sans-serif;border-radius:999px;padding:2px 8px;margin-left:4px;vertical-align:middle}
+.cores button{position:relative}
+.cores button.of::after{content:"BF";position:absolute;top:-6px;right:-6px;background:#111;color:#f26b1d;font:800 9px "Poppins",sans-serif;border-radius:999px;padding:2px 5px}
+.pcard.bf{box-shadow:0 0 0 3px #111,0 10px 26px rgba(0,0,0,.3)}
+.pcard.bf .bd{border-top-color:#111}
+.pcard.bf .selo{background:linear-gradient(135deg,#111,#3a3a3a);color:var(--sun);box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.cats .chip[data-c="bf"]{background:#111;border-color:#111;color:var(--sun)}
+.cats .chip[data-c="bf"][aria-pressed="true"]{box-shadow:0 0 0 3px var(--sun)}
+.ppreco s{color:var(--muted);font-weight:600;font-size:13px}
+.ppreco .pp{color:#ff3d5a}
+.ppreco .ate{display:block;font-family:var(--f-body);font-size:11.5px;font-weight:800;color:#ff3d5a;margin-top:2px}
+.fechar{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:18px;cursor:pointer}
+@media (max-width:640px){.dbox{grid-template-columns:1fr}.dinfo{padding:16px}.dinfo h2{font-size:20px}}
+@media (max-width:480px){.cat{grid-template-columns:1fr 1fr;gap:8px}.pname{font-size:14px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top">
+    <div class="brand"><div><h1 style="margin:0"><img class="logoimg" src="logo.png" alt="Gabriel Distribuidora" width="720" height="212"></h1><div class="tag2">Catálogo Havaianas</div></div></div>
+    <div class="sub" id="sub">Carregando…</div>
+  </div>
+  <div class="bar"><input id="q" type="search" placeholder="Buscar modelo ou cor" autocomplete="off"><a class="btn pri" id="bBaixarCat" href="folder.html" target="_blank" rel="noopener" hidden>⬇️ Baixar catálogo Black Friday</a></div>
+  <div class="cats" id="cats"></div>
+</div></header>
+<main><div class="wrap">
+  <div id="msg"></div>
+  <p class="note" id="nota"></p>
+  <div class="cat" id="cat"></div>
+</div></main>
+
+<dialog id="det" aria-label="Detalhes do modelo"><div style="position:relative">
+  <button class="fechar" id="fechar" aria-label="Fechar">×</button>
+  <div class="dbox">
+    <div class="dfoto" id="dFoto"></div>
+    <div class="dinfo">
+      <h2 id="dNome"></h2>
+      <div class="ppreco" id="dPreco"></div>
+      <div><div class="lbl" id="dCoresLbl">Cores</div><div class="cores" id="dCores"></div></div>
+      <div><div class="lbl">Cor selecionada</div><div class="cornome" id="dCor"></div><div class="pinfo" id="dAno"></div></div>
+      <div><div class="lbl">Tamanhos disponíveis</div><div class="tams" id="dTams"></div></div>
+    </div>
+  </div>
+</div></dialog>
+
+<script>
+const $=id=>document.getElementById(id);
+const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// fotos em alta têm uma versão de 400px para cards e miniaturas
+const mini=u=>/^\/?fotos\/hd\/[^/]+\.jpg$/.test(u)?u.replace(/\.jpg$/,'-400.jpg'):u;
+// promoção vencida sai sozinha (também na versão publicada no GitHub, que não tem servidor)
+const hojeBR=()=>new Date(Date.now()-3*3600e3).toISOString().slice(0,10);
+function semVencidas(L){const h=hojeBR();for(const i of L)if(i.promo&&i.promoAte&&i.promoAte<h){i.promo=i.promoMax=null;i.promoNome=null;i.cores.forEach(c=>{c.promo=null;c.tamsPromo=[];c.precoTam=null})}return L}
+// filtros = coleções criadas no painel (só as que têm modelo no catálogo)
+function renderCats(cols){const temPromo=itens.some(i=>i.promo&&i.promoNome!=='Black Friday'),temBf=itens.some(i=>i.promoNome==='Black Friday');
+  $('bBaixarCat').hidden=!temBf;
+  if(cat&&!cols.some(c=>c.id===cat)&&!(cat==='promo'&&temPromo)&&!(cat==='bf'&&temBf))cat='';
+  $('cats').innerHTML=[{id:'',nome:'Todos'},...(temBf?[{id:'bf',nome:'🖤 Black Friday'}]:[]),...(temPromo?[{id:'promo',nome:'🔥 Promoções'}]:[]),...cols].map(c=>`<button class="chip" data-c="${esc(c.id)}" aria-pressed="${c.id===cat}">${esc(c.nome)}</button>`).join('')}
+const dataBR=s=>s?s.slice(8,10)+'/'+s.slice(5,7):'';
+const precoTxt=i=>i.promo?`${i.promoMax>i.promo?'<small>a partir de</small> ':i.precoMin>i.promo?`<s>${brl(i.precoMin)}</s> `:''}<span class="pp">${brl(i.promo)}</span> <small>o par</small>${i.promoAte?`<span class="ate">${esc(i.promoNome||'Promoção')} até ${dataBR(i.promoAte)}</span>`:''}`:i.precoMin==null?'':(i.precoMin===i.precoMax?`${brl(i.precoMin)} <small>o par</small>`:`<small>a partir de</small> ${brl(i.precoMin)}`);
+let itens=[],versao=0,dia='',cat='',aberto='';
+
+function render(){
+  const q=$('q').value.trim().toLowerCase();
+  const L=itens.filter(i=>(!cat||(cat==='bf'?i.promoNome==='Black Friday':cat==='promo'?i.promo:i.colecao===cat))).map(vis).filter(i=>i.cores.length&&(!q||q.split(/\s+/).every(w=>(i.produto+' '+i.cores.map(c=>c.nomeCor+' '+c.cor).join(' ')).toLowerCase().includes(w))));
+  $('nota').textContent=L.length?`${L.length} modelos`:'';
+  if(!L.length){$('cat').innerHTML=`<div class="empty">${itens.length?'Nenhum modelo com essa busca.':'Nenhum produto disponível no momento.'}</div>`;return}
+  $('cat').innerHTML=L.map(i=>{const capa=i.cores.find(c=>c.foto),n=i.cores.length;
+    const bf=i.promoNome==='Black Friday';
+    return `<button class="pcard${i.promo?(bf?' bf':' promo'):''}" data-p="${esc(i.produto)}"><div class="ph">${i.promo?`<span class="selo">${bf?'BLACK FRIDAY':'PROMOÇÃO'}</span>`:''}${capa?`<img src="${esc(mini(capa.foto))}" alt="${esc(i.produto)}" loading="lazy">`:'<span class="nophoto">foto em breve</span>'}</div>
+    <div class="bd"><div class="pname">${esc(i.produto)}</div>
+    <div class="pinfo">${n} ${n>1?'cores':'cor'}${i.promo&&cat!=='bf'&&cat!=='promo'&&i.cores.some(c=>!(c.promo>0))?` · <b class="emof">${i.cores.filter(c=>c.promo>0).length} em ${bf?'Black Friday':'promoção'}</b>`:''}</div>
+    ${n>1?`<div class="dots">${i.cores.slice(0,6).map(c=>c.foto?`<img src="${esc(mini(c.foto))}" alt="" loading="lazy">`:'<i></i>').join('')}${n>6?`<span>+${n-6}</span>`:''}</div>`:''}
+    <div class="ppreco">${precoTxt(i)}</div></div></button>`}).join('');
+}
+// na aba Black Friday / Promoções, cada modelo mostra só as cores que estão em oferta
+function vis(i){return cat==='bf'||cat==='promo'?{...i,cores:i.cores.filter(c=>c.promo>0).map(c=>({...c,tams:c.tamsPromo&&c.tamsPromo.length?c.tamsPromo:c.tams}))}:i}
+function abrir(nome){
+  const i0=itens.find(x=>x.produto===nome),i=i0&&vis(i0);aberto=nome;if(!i){$('det').close();return}
+  $('dNome').textContent=i.produto;$('dPreco').innerHTML=precoTxt(i);
+  $('dCoresLbl').textContent=`${i.cores.length} ${i.cores.length>1?'cores':'cor'}`;
+  $('dCores').innerHTML=i.cores.map((c,k)=>`<button data-k="${k}" aria-pressed="${k===0}" title="${esc(c.nomeCor)}${c.promo>0?' · '+esc(i.promoNome||'promoção'):''}"${i.promo&&c.promo>0?' class="of"':''}>${c.foto?`<img src="${esc(mini(c.foto))}" alt="${esc(c.nomeCor)}">`:`<i>${esc(c.cor||'—')}</i>`}</button>`).join('');
+  const sel=k=>{const c=i.cores[k];
+    $('dFoto').innerHTML=c.foto?`<img src="${esc(c.foto)}" alt="${esc(i.produto+' '+c.nomeCor)}">`:'<span class="nophoto">foto em breve</span>';
+    $('dPreco').innerHTML=c.promo>0?`${c.preco>c.promo?`<s>${brl(c.preco)}</s> `:''}<span class="pp">${brl(c.promo)}</span> <small>o par</small>${i.promoAte?`<span class="ate">${esc(i.promoNome||'Promoção')} até ${dataBR(i.promoAte)}</span>`:''}`:c.preco>0?`${brl(c.preco)} <small>o par</small>`:'';
+    $('dCor').textContent=`${c.nomeCor||'—'}${c.cor?' · código '+c.cor:''}`;
+    if(i.promo)$('dCor').insertAdjacentHTML('beforeend',c.promo>0?` <span class="tagof">${esc(i.promoNome||'Promoção')}</span>`:' <span class="tagfora">fora da oferta</span>');$('dAno').textContent=c.ano?'Coleção '+c.ano:'';
+    // quando a cor tem preço diferente por tamanho, mostra o preço em cada tamanho
+    const pt=c.precoTam||{},varia=new Set(Object.values(pt)).size>1;
+    if(varia)$('dPreco').innerHTML=`<small>a partir de</small> <span class="pp">${brl(Math.min(...Object.values(pt)))}</span> <small>o par</small>${i.promoAte?`<span class="ate">${esc(i.promoNome||'Promoção')} até ${dataBR(i.promoAte)}</span>`:''}`;
+    $('dTams').innerHTML=c.tams.map(t=>`<span>${esc(t)}${varia&&pt[t]?` · <b>${brl(pt[t])}</b>`:''}</span>`).join('');
+    $('dCores').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k==k))};
+  $('dCores').onclick=e=>{const b=e.target.closest('button');if(b)sel(+b.dataset.k)};
+  sel(0);if(!$('det').open)$('det').showModal();
+}
+$('cat').addEventListener('click',e=>{const b=e.target.closest('.pcard');if(b)abrir(b.dataset.p)});
+$('fechar').onclick=()=>$('det').close();
+$('det').addEventListener('click',e=>{if(e.target===$('det'))$('det').close()});
+$('cats').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;$('cats').querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+$('q').addEventListener('input',render);
+async function carregar(){
+  try{const r=await fetch('catalogo.json?t='+Date.now());if(!r.ok)throw 0;const d=await r.json();$('msg').innerHTML='';
+    if(d.versao===versao&&d.dia===dia)return;versao=d.versao;dia=d.dia;itens=semVencidas(d.itens);renderCats(d.colecoes||[]);
+    if($('det').open&&aberto)abrir(aberto);
+    $('sub').textContent=`${itens.length} modelos · atualizado ${new Date(d.versao).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`;render();
+  }catch(e){$('msg').innerHTML='<div class="banner">Não foi possível carregar o catálogo. Verifique a internet; a página tenta de novo sozinha.</div>'}
+}
+carregar();setInterval(carregar,60000);
+// atualização na hora: o servidor avisa quando o admin muda algo
+</script>
+</body>
+</html>
