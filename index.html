@@ -154,7 +154,7 @@ async function carregar(){
     $('sub').textContent=`${itens.length} modelos · atualizado ${new Date(d.versao).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`;render();
   }catch(e){$('msg').innerHTML='<div class="banner">Não foi possível carregar o catálogo. Verifique a internet; a página tenta de novo sozinha.</div>'}
 }
-carregar();setInterval(carregar,60000);
+carregar();setInterval(carregar,20000);
 // atualização na hora: o servidor avisa quando o admin muda algo
 </script>
 </body>
