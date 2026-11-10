@@ -96,13 +96,16 @@ const $=id=>document.getElementById(id);
 const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // fotos em alta têm uma versão de 400px para cards e miniaturas
+// catálogo de um vendedor: /v/nome (senão, o catálogo geral)
+const VEND=(location.pathname.match(/^/v/([^/]+)/)||[])[1]||'';
+const urlCat=()=>VEND?'/api/catalogo?v='+encodeURIComponent(VEND):'catalogo.json?t='+Date.now();
 const mini=u=>/^\/?fotos\/hd\/[^/]+\.jpg$/.test(u)?u.replace(/\.jpg$/,'-400.jpg'):u;
 // promoção vencida sai sozinha (também na versão publicada no GitHub, que não tem servidor)
 const hojeBR=()=>new Date(Date.now()-3*3600e3).toISOString().slice(0,10);
 function semVencidas(L){const h=hojeBR();for(const i of L)if(i.promo&&i.promoAte&&i.promoAte<h){i.promo=i.promoMax=null;i.promoNome=null;i.cores.forEach(c=>{c.promo=null;c.tamsPromo=[];c.precoTam=null})}return L}
 // filtros = coleções criadas no painel (só as que têm modelo no catálogo)
 function renderCats(cols){const temPromo=itens.some(i=>i.promo&&i.promoNome!=='Black Friday'),temBf=itens.some(i=>i.promoNome==='Black Friday');
-  $('bBaixarCat').hidden=!temBf;
+  $('bBaixarCat').hidden=!(temBf||(VEND&&itens.some(i=>i.promo)));
   if(cat&&!cols.some(c=>c.id===cat)&&!(cat==='promo'&&temPromo)&&!(cat==='bf'&&temBf))cat='';
   $('cats').innerHTML=[{id:'',nome:'Todos'},...(temBf?[{id:'bf',nome:'🖤 Black Friday'}]:[]),...(temPromo?[{id:'promo',nome:'🔥 Promoções'}]:[]),...cols].map(c=>`<button class="chip" data-c="${esc(c.id)}" aria-pressed="${c.id===cat}">${esc(c.nome)}</button>`).join('')}
 const dataBR=s=>s?s.slice(8,10)+'/'+s.slice(5,7):'';
@@ -148,7 +151,7 @@ $('det').addEventListener('click',e=>{if(e.target===$('det'))$('det').close()});
 $('cats').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;$('cats').querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 $('q').addEventListener('input',render);
 async function carregar(){
-  try{const r=await fetch('catalogo.json?t='+Date.now());if(!r.ok)throw 0;const d=await r.json();$('msg').innerHTML='';
+  try{const r=await fetch(urlCat());if(!r.ok)throw 0;const d=await r.json();$('msg').innerHTML='';if(d.vendedor){document.querySelector('.tag2').textContent='Catálogo de '+d.vendedor;document.title=d.vendedor+' · Catálogo Havaianas';$('bBaixarCat').href='/v/'+VEND+'/folder'}
     if(d.versao===versao&&d.dia===dia)return;versao=d.versao;dia=d.dia;itens=semVencidas(d.itens);renderCats(d.colecoes||[]);
     if($('det').open&&aberto)abrir(aberto);
     $('sub').textContent=`${itens.length} modelos · atualizado ${new Date(d.versao).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`;render();

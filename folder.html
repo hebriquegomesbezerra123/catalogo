@@ -66,6 +66,9 @@ body{margin:0;background:#e9edf3;color:var(--ink);font-family:"Nunito",system-ui
 const $=id=>document.getElementById(id);
 const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// catálogo de um vendedor: /v/nome (senão, o catálogo geral)
+const VEND=(location.pathname.match(/^/v/([^/]+)/)||[])[1]||'';
+const urlCat=()=>VEND?'/api/catalogo?v='+encodeURIComponent(VEND):'catalogo.json?t='+Date.now();
 const mini=u=>/^\/?fotos\/hd\/[^/]+\.jpg$/.test(u)?u.replace(/\.jpg$/,'-400.jpg'):u;
 const hojeBR=()=>new Date(Date.now()-3*3600e3).toISOString().slice(0,10);
 const dataBR=s=>s?s.slice(8,10)+'/'+s.slice(5,7):'';
@@ -108,7 +111,7 @@ $('bBaixar').onclick=async()=>{const b=$('bBaixar'),txt=b.textContent;b.disabled
     caixa.remove()}
   catch(e){alert('Não deu para gerar o PDF aqui. Use o botão Imprimir e escolha "Salvar como PDF".')}
   b.disabled=false;b.textContent=txt};
-Promise.all([fetch('catalogo.json?t='+Date.now()).then(r=>r.json()),logoPronta]).then(([d])=>{itens=d.itens.filter(i=>i.promoNome==='Black Friday'&&i.promo&&!(i.promoAte&&i.promoAte<hojeBR())).map(i=>({...i,cores:i.cores.filter(c=>c.promo>0).map(c=>({...c,tams:c.tamsPromo&&c.tamsPromo.length?c.tamsPromo:c.tams}))})).sort((a,b)=>a.produto.localeCompare(b.produto));render()})
+Promise.all([fetch(urlCat()).then(r=>r.json()),logoPronta]).then(([d])=>{itens=d.itens.filter(i=>(VEND?true:i.promoNome==='Black Friday')&&i.promo&&!(i.promoAte&&i.promoAte<hojeBR())).map(i=>({...i,cores:i.cores.filter(c=>c.promo>0).map(c=>({...c,tams:c.tamsPromo&&c.tamsPromo.length?c.tamsPromo:c.tams}))})).sort((a,b)=>a.produto.localeCompare(b.produto));render()})
   .catch(()=>{$('folhas').innerHTML='<div class="folha"><div class="vazio">Não foi possível carregar os produtos.</div></div>'});
 </script>
 </body>
