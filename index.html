@@ -60,6 +60,34 @@
 .fechar{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:18px;cursor:pointer}
 @media (max-width:640px){.dbox{grid-template-columns:1fr}.dinfo{padding:16px}.dinfo h2{font-size:20px}}
 @media (max-width:480px){.cat{grid-template-columns:1fr 1fr;gap:8px}.pname{font-size:14px}}
+/* carrinho */
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:6px}
+.qt{display:flex;align-items:center;justify-content:space-between;gap:4px;border:1.5px solid var(--line);border-radius:12px;padding:4px 6px}
+.qt.on{border-color:var(--accent);background:var(--accent-soft)}
+.qt b{font-family:var(--f-display);font-size:14px;color:var(--accent);min-width:38px}
+.qt b small{display:block;font:600 10.5px var(--f-body);color:var(--muted)}
+.qt button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-size:17px;cursor:pointer;line-height:1;flex:none}
+.qt input{width:38px;text-align:center;border:0;background:transparent;font:700 15px var(--f-body);color:inherit;-moz-appearance:textfield}
+.qt input::-webkit-inner-spin-button{-webkit-appearance:none}
+.addc{width:100%;padding:12px;border-radius:999px;border:0;background:var(--accent);color:#fff;font:700 15px var(--f-display);cursor:pointer}
+.addc:disabled{opacity:.45;cursor:default}
+#bCarr{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:20;border:0;border-radius:999px;background:#25a244;color:#fff;font:700 15px var(--f-display);padding:13px 18px;box-shadow:0 8px 22px rgba(0,0,0,.25);cursor:pointer}
+#bCarr span{background:#fff;color:#25a244;border-radius:999px;padding:1px 8px;margin-left:6px}
+#carr{width:min(620px,calc(100vw - 24px))}
+.cbox{padding:18px;display:flex;flex-direction:column;gap:12px}
+.cbox h2{margin:0;font-family:var(--f-display);color:var(--accent)}
+.citem{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+.citem img,.citem i{width:48px;height:48px;object-fit:contain;background:var(--thumb);border-radius:8px;display:block}
+.citem .n{font-weight:700;font-size:14px}.citem .m{font-size:12.5px;color:var(--muted)}
+.ctot{font:800 18px var(--f-display);text-align:right}
+#cDados{display:flex;flex-direction:column;gap:10px}
+#cDados[hidden]{display:none}
+.cbox label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)}
+.cbox input,.cbox textarea{font:inherit;font-size:15px;padding:10px;border:1px solid var(--line);border-radius:10px;color:var(--fg);background:var(--panel)}
+.cvazio{color:var(--muted);text-align:center;padding:20px}
+.ok{background:#e9f8ee;border:1px solid #9ad8ad;color:#17602f;border-radius:12px;padding:14px;font-weight:600}
+@media (max-width:480px){#bCarr{left:16px;right:16px}}
+.anos{margin-top:6px}.anos .chip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff;font-size:12.5px}.anos .chip[aria-pressed="true"]{background:#f26b1d;border-color:#f26b1d}
 </style>
 </head>
 <body>
@@ -70,6 +98,7 @@
   </div>
   <div class="bar"><input id="q" type="search" placeholder="Buscar modelo ou cor" autocomplete="off"><a class="btn pri" id="bBaixarCat" href="folder.html" target="_blank" rel="noopener" hidden>⬇️ Baixar catálogo Black Friday</a></div>
   <div class="cats" id="cats"></div>
+  <div class="cats anos" id="anos" hidden></div>
 </div></header>
 <main><div class="wrap">
   <div id="msg"></div>
@@ -82,22 +111,48 @@
   <div class="dbox">
     <div class="dfoto" id="dFoto"></div>
     <div class="dinfo">
-      <h2 id="dNome"></h2>
+      <h2 id="dNome"></h2><p id="dDesc" style="margin:4px 0 8px;color:#555;white-space:pre-line" hidden></p>
       <div class="ppreco" id="dPreco"></div>
       <div><div class="lbl" id="dCoresLbl">Cores</div><div class="cores" id="dCores"></div></div>
       <div><div class="lbl">Cor selecionada</div><div class="cornome" id="dCor"></div><div class="pinfo" id="dAno"></div></div>
-      <div><div class="lbl">Tamanhos disponíveis</div><div class="tams" id="dTams"></div></div>
+      <div><div class="lbl">Tamanhos · escolha quantas caixas</div><div class="qgrid" id="dTams"></div></div>
+      <button class="addc" id="bAdd" disabled>🛒 Adicionar ao pedido</button><div class="pinfo" id="addMsg"></div>
     </div>
   </div>
 </div></dialog>
 
+<button id="bCarr" hidden>🛒 Finalizar pedido<span id="nCarr">0</span></button>
+<dialog id="carr" aria-label="Meu pedido"><form class="cbox" id="formCarr" novalidate>
+  <div class="chead"><button class="fechar" id="fCarr" type="button" aria-label="Fechar">×</button>
+    <h2 id="cTitulo">🛒 Meu pedido</h2><div class="csub" id="cSub"></div>
+    <ol class="cpassos" id="cPassos"><li data-p="1">1. Conferir</li><li data-p="2">2. Seus dados</li><li data-p="3">3. Pronto</li></ol>
+  </div>
+  <div class="cpasso" id="cPasso1">
+    <div class="cbody" id="cItens"></div>
+  </div>
+  <div class="cpasso" id="cPasso2" hidden>
+    <div id="cDados">
+      <label>Seu nome ou nome da loja *<input id="cNome" maxlength="80" autocomplete="name" placeholder="Ex.: Loja da Ana"></label>
+      <label>CPF ou CNPJ *<input id="cDoc" maxlength="18" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00 ou 00.000.000/0000-00"></label>
+      <label>WhatsApp (com DDD) *<input id="cTel" maxlength="20" inputmode="tel" autocomplete="tel" placeholder="(44) 99999-9999"></label>
+      <label>Cidade<input id="cCid" maxlength="80" autocomplete="address-level2" placeholder="Ex.: Maringá - PR"></label>
+      <label>Observação (opcional)<textarea id="cObs" rows="2" maxlength="600" placeholder="Ex.: entregar à tarde"></textarea></label>
+    </div>
+  </div>
+  <div class="cpasso cfeito" id="cPasso3" hidden></div>
+  <div class="caviso" id="cAviso" role="alert" hidden></div>
+  <div class="cpe" id="cPe">
+    <div class="cpe-tot" id="cTot"></div>
+    <div class="cpe-bts"><button type="button" class="cbt2" id="bVoltar" hidden>← Voltar</button><button type="submit" class="addc" id="bEnviar">Continuar →</button></div>
+  </div>
+</form></dialog>
 <script>
 const $=id=>document.getElementById(id);
 const brl=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // fotos em alta têm uma versão de 400px para cards e miniaturas
 // catálogo de um vendedor: /v/nome (senão, o catálogo geral)
-const VEND=(location.pathname.match(/^/v/([^/]+)/)||[])[1]||'';
+const VEND=(location.pathname.match(/^\/v\/([^/]+)/)||[])[1]||'';
 const urlCat=()=>VEND?'/api/catalogo?v='+encodeURIComponent(VEND):'catalogo.json?t='+Date.now();
 const mini=u=>/^\/?fotos\/hd\/[^/]+\.jpg$/.test(u)?u.replace(/\.jpg$/,'-400.jpg'):u;
 // promoção vencida sai sozinha (também na versão publicada no GitHub, que não tem servidor)
@@ -126,10 +181,15 @@ function render(){
     <div class="ppreco">${precoTxt(i)}</div></div></button>`}).join('');
 }
 // na aba Black Friday / Promoções, cada modelo mostra só as cores que estão em oferta
-function vis(i){return cat==='bf'||cat==='promo'?{...i,cores:i.cores.filter(c=>c.promo>0).map(c=>({...c,tams:c.tamsPromo&&c.tamsPromo.length?c.tamsPromo:c.tams}))}:i}
+// abas por coleção (ano): as 2 mais novas têm aba própria, o resto fica em "Anteriores"
+let anoSel='',anosTop=[];
+const grupoAno=a=>anosTop.includes(a)?a:'antigas';
+function renderAnos(){const todos=[...new Set(itens.flatMap(i=>i.cores.map(c=>c.ano||'')))];anosTop=todos.filter(a=>/^20\d\d\/\d\d$/.test(a)).sort().reverse().slice(0,2);const grupos=new Set(todos.map(grupoAno));if(anoSel&&!grupos.has(anoSel))anoSel='';$('anos').hidden=grupos.size<2;$('anos').innerHTML=[['','Todas as coleções'],...anosTop.map(a=>[a,'Coleção '+a]),...(grupos.has('antigas')?[['antigas','Coleções anteriores']]:[])].map(([k,l])=>`<button class="chip" data-a="${k}" aria-pressed="${k===anoSel}">${l}</button>`).join('')}
+function vis(i){i=visCat(i);return anoSel?{...i,cores:i.cores.filter(c=>grupoAno(c.ano||'')===anoSel)}:i}
+function visCat(i){return cat==='bf'||cat==='promo'?{...i,cores:i.cores.filter(c=>c.promo>0).map(c=>({...c,tams:c.tamsPromo&&c.tamsPromo.length?c.tamsPromo:c.tams}))}:i}
 function abrir(nome){
   const i0=itens.find(x=>x.produto===nome),i=i0&&vis(i0);aberto=nome;if(!i){$('det').close();return}
-  $('dNome').textContent=i.produto;$('dPreco').innerHTML=precoTxt(i);
+  $('dNome').textContent=i.produto;$('dDesc').textContent=i.desc||'';$('dDesc').hidden=!i.desc;$('dPreco').innerHTML=precoTxt(i);
   $('dCoresLbl').textContent=`${i.cores.length} ${i.cores.length>1?'cores':'cor'}`;
   $('dCores').innerHTML=i.cores.map((c,k)=>`<button data-k="${k}" aria-pressed="${k===0}" title="${esc(c.nomeCor)}${c.promo>0?' · '+esc(i.promoNome||'promoção'):''}"${i.promo&&c.promo>0?' class="of"':''}>${c.foto?`<img src="${esc(mini(c.foto))}" alt="${esc(c.nomeCor)}">`:`<i>${esc(c.cor||'—')}</i>`}</button>`).join('');
   const sel=k=>{const c=i.cores[k];
@@ -140,7 +200,7 @@ function abrir(nome){
     // quando a cor tem preço diferente por tamanho, mostra o preço em cada tamanho
     const pt=c.precoTam||{},varia=new Set(Object.values(pt)).size>1;
     if(varia)$('dPreco').innerHTML=`<small>a partir de</small> <span class="pp">${brl(Math.min(...Object.values(pt)))}</span> <small>o par</small>${i.promoAte?`<span class="ate">${esc(i.promoNome||'Promoção')} até ${dataBR(i.promoAte)}</span>`:''}`;
-    $('dTams').innerHTML=c.tams.map(t=>`<span>${esc(t)}${varia&&pt[t]?` · <b>${brl(pt[t])}</b>`:''}</span>`).join('');
+    montarTams(c,varia,pt);
     $('dCores').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k==k))};
   $('dCores').onclick=e=>{const b=e.target.closest('button');if(b)sel(+b.dataset.k)};
   sel(0);if(!$('det').open)$('det').showModal();
@@ -148,11 +208,12 @@ function abrir(nome){
 $('cat').addEventListener('click',e=>{const b=e.target.closest('.pcard');if(b)abrir(b.dataset.p)});
 $('fechar').onclick=()=>$('det').close();
 $('det').addEventListener('click',e=>{if(e.target===$('det'))$('det').close()});
+$('anos').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;anoSel=b.dataset.a;$('anos').querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 $('cats').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;$('cats').querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 $('q').addEventListener('input',render);
 async function carregar(){
   try{const r=await fetch(urlCat());if(!r.ok)throw 0;const d=await r.json();$('msg').innerHTML='';if(d.vendedor){document.querySelector('.tag2').textContent='Catálogo de '+d.vendedor;document.title=d.vendedor+' · Catálogo Havaianas';$('bBaixarCat').href='/v/'+VEND+'/folder'}
-    if(d.versao===versao&&d.dia===dia)return;versao=d.versao;dia=d.dia;itens=semVencidas(d.itens);renderCats(d.colecoes||[]);
+    if(d.versao===versao&&d.dia===dia)return;versao=d.versao;dia=d.dia;itens=semVencidas(d.itens);renderCats(d.colecoes||[]);renderAnos();
     if($('det').open&&aberto)abrir(aberto);
     $('sub').textContent=`${itens.length} modelos · atualizado ${new Date(d.versao).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`;render();
   }catch(e){$('msg').innerHTML='<div class="banner">Não foi possível carregar o catálogo. Verifique a internet; a página tenta de novo sozinha.</div>'}
@@ -160,5 +221,9 @@ async function carregar(){
 carregar();setInterval(carregar,20000);
 // atualização na hora: o servidor avisa quando o admin muda algo
 </script>
+<script src="/etapas.js"></script>
+<script src="/carrinho.js"></script>
+<script src="/cliente.js"></script>
+<script src="/atualizacao.js"></script>
 </body>
 </html>
